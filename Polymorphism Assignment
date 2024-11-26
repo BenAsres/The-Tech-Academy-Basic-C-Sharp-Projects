@@ -1,0 +1,77 @@
+using System;
+
+namespace EmployeeApp
+{
+    // Define the IQuittable interface with a Quit method
+    public interface IQuittable
+    {
+        void Quit();  // Method to be implemented by any class that "quits"
+    }
+
+    // Employee class implements IQuittable interface
+    public class Employee : IQuittable
+    {
+        // Employee properties
+        public int Id { get; set; }          
+        public string FirstName { get; set; } 
+        public string LastName { get; set; }  
+
+        // Implement the Quit method from the IQuittable interface
+        public void Quit()
+        {
+            Console.WriteLine($"{FirstName} {LastName} has quit their job.");
+        }
+
+        // Overload "==" operator to compare Employees based on Id
+        public static bool operator ==(Employee emp1, Employee emp2)
+        {
+            if (ReferenceEquals(emp1, emp2)) return true;  // Same reference is equal
+            if (emp1 == null || emp2 == null) return false; // One is null, they're not equal
+            return emp1.Id == emp2.Id;  // Compare by Id
+        }
+
+        // Overload "!=" operator to complement the "==" operator
+        public static bool operator !=(Employee emp1, Employee emp2)
+        {
+            return !(emp1 == emp2);  // Return the opposite of the "==" comparison
+        }
+
+        // Override Equals to ensure consistency with "==" operator
+        public override bool Equals(object obj)
+        {
+            if (obj is Employee otherEmployee)
+            {
+                return this.Id == otherEmployee.Id;  // Compare by Id
+            }
+            return false;
+        }
+
+        // Override GetHashCode for consistency with Equals
+        public override int GetHashCode()
+        {
+            return Id.GetHashCode();  // Return the hash code based on the Id
+        }
+    }
+
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            // Create an Employee object
+            Employee emp1 = new Employee
+            {
+                Id = 1,
+                FirstName = "John",
+                LastName = "Doe"
+            };
+
+            // Create an IQuittable reference and assign the Employee to it
+            IQuittable quitter = emp1;
+
+            // Call the Quit method via IQuittable reference
+            quitter.Quit();  // Outputs: John Doe has quit their job.
+
+            Console.ReadKey(); // Wait for user input before closing
+        }
+    }
+}
