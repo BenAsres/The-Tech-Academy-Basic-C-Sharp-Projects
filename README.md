@@ -1,4 +1,4 @@
-# The-Tech-Academy-Basic-C-Sharp-Projects
+# The-Tech-Academy-C-Sharp-Projects
 
 In this repository I have stored some projects I've completed with AOLCC.
 
