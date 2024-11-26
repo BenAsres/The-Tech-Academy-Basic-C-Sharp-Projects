@@ -1,0 +1,62 @@
+using Microsoft.EntityFrameworkCore;
+using System;
+
+namespace CodeFirstExample
+{
+    // The Student class represents a student in our application.
+    // It will be mapped to the "Students" table in the database.
+    public class Student
+    {
+        public int Id { get; set; }          // Primary Key
+        public string FirstName { get; set; } // Student's first name
+        public string LastName { get; set; }  // Student's last name
+        public int Age { get; set; }          // Student's age
+    }
+
+    // The SchoolContext class is a subclass of DbContext.
+    // It manages the connection to the database and maps classes to tables.
+    public class SchoolContext : DbContext
+    {
+        public DbSet<Student> Students { get; set; }  // Represents the "Students" table in the database
+
+        // Override OnConfiguring to provide the connection string for the database
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        {
+            // Connection string for local SQL Server database (LocalDB)
+            optionsBuilder.UseSqlServer(@"Server=(localdb)\mssqllocaldb;Database=SchoolDb;Trusted_Connection=True;");
+        }
+    }
+
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            // Create a new instance of SchoolContext (which handles the database)
+            using (var context = new SchoolContext())
+            {
+                // Ensure that the database is created. If not, it will be created.
+                context.Database.EnsureCreated();
+
+                // Create a new student object
+                var student = new Student
+                {
+                    FirstName = "John",  // Assign values to the student's properties
+                    LastName = "Doe",
+                    Age = 20
+                };
+
+                // Add the new student to the Students table in the database
+                context.Students.Add(student);
+
+                // Save the changes to the database (this commits the add operation)
+                context.SaveChanges();
+
+                // Output a message to confirm the student has been added
+                Console.WriteLine("Student added successfully!");
+            }
+
+            // Wait for user input before closing the console window
+            Console.ReadKey();
+        }
+    }
+}
